@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { CONFIG, NEXT_PUBLIC_AGENT_API_URL, NEXT_PUBLIC_AGENT_ID, NEXT_PUBLIC_AIRDROP_API_BASE_URL, NEXT_PUBLIC_AVAIL_MONITORING_API_URL, NEXT_PUBLIC_CHARGE_PAYMENTS_API_BASE_URL, NEXT_PUBLIC_COIN_GECKO_API_KEY, NEXT_PUBLIC_FUSE_ACCOUNT_API_BASE_URL, NEXT_PUBLIC_FUSE_API_BASE_URL, NEXT_PUBLIC_AVAIL_REWARD_API_URL } from './config'
-import { AirdropLeaderboard, AirdropUser, CreateAirdropUser, DelegatedAmountsByDelegators, DelegatedAmountsRequest, Invoice, Operator, OperatorCheckoutSession, OperatorCheckout, OperatorContactDetail, OperatorWallet, Paymaster, SignData, ValidatorResponse, ChargeBridgeSupportedTokens, ChargeBridge, ChargeBridgeResponse, TextResponse } from "./types";
+import { CONFIG, NEXT_PUBLIC_AGENT_API_URL, NEXT_PUBLIC_AGENT_ID, NEXT_PUBLIC_AIRDROP_API_BASE_URL, NEXT_PUBLIC_AVAIL_MONITORING_API_URL, NEXT_PUBLIC_CHARGE_PAYMENTS_API_BASE_URL, NEXT_PUBLIC_ALCHEMY_API_KEY, NEXT_PUBLIC_FUSE_ACCOUNT_API_BASE_URL, NEXT_PUBLIC_FUSE_API_BASE_URL, NEXT_PUBLIC_AVAIL_REWARD_API_URL } from './config'
+import { AirdropLeaderboard, AirdropUser, CreateAirdropUser, DelegatedAmountsByDelegators, DelegatedAmountsRequest, Invoice, Operator, OperatorCheckoutSession, OperatorCheckout, OperatorContactDetail, OperatorWallet, Paymaster, SignData, ValidatorResponse, ChargeBridgeSupportedTokens, ChargeBridge, ChargeBridgeResponse, TextResponse, TokenPriceUsd } from "./types";
 import { Address } from "viem";
 
 export const fetchAllNodes = () =>
@@ -22,15 +22,10 @@ export const fetchFuseTokenData = () =>
     axios.get(`${CONFIG.bootApi}/stats/circulating`).then(response => response.data)
 
 export const fetchTokenPrice = async (tokenId: string) => {
-    const response = await axios.get(
-        `https://pro-api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`,
-        {
-            headers: {
-                "x-cg-pro-api-key": NEXT_PUBLIC_COIN_GECKO_API_KEY,
-            }
-        }
+    const response = await axios.get<TokenPriceUsd>(
+        `https://api.g.alchemy.com/prices/v1/${NEXT_PUBLIC_ALCHEMY_API_KEY}/tokens/by-symbol?symbols=${tokenId}`
     );
-    return response.data[`${tokenId}`].usd as number;
+    return Number(response?.data?.data[0]?.prices[0]?.value);
 };
 
 export const fetchTotalSupply = async () => {
