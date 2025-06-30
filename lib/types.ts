@@ -640,3 +640,14 @@ export type WithdrawModal = {
 export type ChatMessageProps = {
   message: TextResponse;
 };
+
+export type TokenPriceUsd = {
+  data: {
+    symbol: string;
+    prices: {
+      currency: string;
+      value: string;
+      lastUpdatedAt: string;
+    }[];
+  }[];
+};
