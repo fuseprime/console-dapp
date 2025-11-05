@@ -53,7 +53,7 @@ export const chains: ChainConfigLike[] = [
     lzChainId: 102,
     icon: bnb,
     chainId: 56,
-    rpc: "https://weathered-side-brook.bsc.quiknode.pro/f11b337cb3411c96e514504308b95f17288330f4/",
+    rpc: `https://bnb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
     logo: "",
     tokenId: "binancecoin",
   },
